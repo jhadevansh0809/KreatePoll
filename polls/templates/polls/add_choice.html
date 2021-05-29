@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+ {% if edit_mode %}
+  Edit choice
+ {% else %}
+  Add choice
+ {% endif %}
+{% endblock title %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/editchoice.css' %}">
+<link rel="stylesheet" href="{% static 'css/include/nav.css' %}">
+<style>
+  body{
+    background-color: black;
+  }
+  .container{
+    border: 1.5px solid red;
+    padding:10px;
+    margin-top: 2em;
+    color: white;
+    padding-bottom: 2em;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include '../includes/navbar.html' %}
+<div class="container">
+  <h1 class='text-center my-5 white'>
+      {% if edit_mode %}
+        Edit The Choice
+      {% else %}
+        Add A New Choice
+      {% endif %}
+      Using The Form Below
+  </h1>
+<section class="section--Main">
+          <form action="" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group white">
+              {{ field.errors }}
+              {{ field.label_tag }}
+              {{ field }}
+            </div>
+            {% endfor %}
+            <input type="submit" value="SUBMIT" class="btn btn-primary" style=" font-weight: 900;">
+            
+            {% if edit_mode %}
+              <a href="{% url 'polls:choice_confirm_delete' choice.id %}" class="btn btn-danger" style=" font-weight: 900;">
+                  <i class="far fa-trash-alt white"></i> DELETE
+              </a>
+            {% endif %}
+      </form>
+    </section>
+</div>
+
+{% endblock %}

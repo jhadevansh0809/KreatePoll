@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+ Edit Poll
+{% endblock title %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/editpoll.css' %}">
+<link rel="stylesheet" href="{% static 'css/include/nav.css' %}">
+{% endblock %}
+
+{% block content %}
+</div>
+{% include '../includes/navbar.html' %}
+<section class="section--Main" style="border:0.05em solid red;margin:2em;padding:2em">
+    <h1>Edit Poll</h1>
+    <form action="" method="post">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        {{ field }}
+      </div>
+      {% endfor %}
+      <input type="submit" value="SUBMIT" class="btn btn-primary" style=" font-weight: 900;">
+      <a href="{% url 'polls:add_choice' poll.id %}" class='btn btn-warning' style=" font-weight: 900;">ADD CHOICE</a>
+      <a href="{% url 'polls:poll_confirm_delete' poll.id %}"
+          class='btn btn-danger' style=" font-weight: 900;">
+          <i class="far fa-trash-alt"></i> DELETE
+      </a>
+  </form>
+  <div class="box2" style="border : 0.05em solid red; padding:2em; margin:2em;">
+  <h3 class='text-center' style="border-bottom:0.05em solid white; margin:2em;font-weight: 900;">Choices</h3>
+  {% for choice in poll.choice_set.all %}
+    <p style="margin: 1.5em auto;"><a href="{% url 'polls:edit_choice' choice.id %}"><i class="fas fa-pencil-alt"></i></a> {{choice.choice_text}}</p>
+  {% endfor %}
+  </div>
+</section>
+{% endblock %}

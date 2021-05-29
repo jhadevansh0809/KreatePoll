@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{poll}}
+{% endblock title %}
+
+
+{% block custom_css %}
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+  <style>
+    body{
+      background-color: black;
+    }
+    .container{
+      border: 1.5px solid red;
+      padding:10px;
+      margin-top: 2em;
+      color: white;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-3">
+
+{% if messages %}
+  <ul class="messages" style="background-color: black;color:white;">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<h3>{{poll}}</h3>
+<h6>(Total Vote Count Till Now- {{poll.num_votes}})</h6>
+<br>
+<form action="{% url 'polls:vote' poll.id %}" method="post">
+{% csrf_token %}
+
+{% for choice in poll.choice_set.all %}
+
+  <input type="radio"
+         name="choice"
+         id="choice{{ forloop.counter }}"
+         value="{{choice.id}}"/>
+  <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
+  <br/>
+
+{% endfor %}
+<br>
+<input class='btn btn-success mb-2' type="submit" value="Vote" {% if not user_can_vote %}disabled{% endif %}/>
+
+</form>
+
+<br>
+{% if not user_can_vote %}
+
+    {% for choice_dict in results %}
+    <div class="row">
+        <div class="col-sm-6">
+        {{choice_dict.text}}
+        <div class="progress mb-1">
+          <div class="progress-bar" role="progressbar" style="width: {{choice_dict.percentage}}%;">{{choice_dict.num_votes}}/{{poll.num_votes}}</div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+{% else %}
+  <p>Vote to see results!</p>
+{% endif %}
+<br>
+<a href="{% url 'polls:list' %}"><button type="button" class="btn btn-info btn-lg">Click To Go Out</button></a>
+
+</div>
+{% endblock %}

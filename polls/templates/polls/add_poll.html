@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+ Add Poll
+{% endblock title %}
+
+
+{% block custom_css %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/addpoll.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include '../includes/navbar.html' %}
+<section class="section--Main" style="border:1.5px solid red;margin:3em;">
+  <h1>Add new poll</h1>
+  <form action="" method="post">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        {{ field }}
+      </div>
+      {% endfor %}
+      <div class="card--content">
+        <h3 class="card--head">
+          If you want to add more choices in your poll:
+       </h3>
+          <div>
+              1. Submit your poll with initial two choices.
+          </div>
+          <div>
+
+              2. Click on <i class="fas fa-pencil-alt" style="color: white;"></i> to edit your poll.
+          </div>
+          <div>
+              3. Add more choices.
+          </div>
+      </div>
+      <input type="submit" value="SUBMIT" class="login__signup submit__btn my-3">
+      <!-- <button class="login__signup submit__btn my-3">SUBMIT</button> -->
+  </form>
+
+  </div>
+</section>
+
+{% endblock %}

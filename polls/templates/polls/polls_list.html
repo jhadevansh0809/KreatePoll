@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+ Polls
+{% endblock title %}
+
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'css/polls.css' %}">
+{% endblock %}
+
+
+{% block content %}
+{% include '../includes/navbar.html' %}
+
+    <div class="headerSpace">
+
+    </div>
+    <section class="section--Main">
+        <div class="navigation">   
+          <a
+          href="{% url 'polls:list' %}">
+          <button class="nav--popularpolls">ALL POLLS</button>
+        </a>   
+        <a
+          href="?num_votes=True">
+          <button class="nav--popularpolls">POPULAR POLLS</button>
+        </a>   
+        <a
+       href="?pub_date=True">
+       <button class="nav--popularpolls">RECENT POLLS</button>
+     </a> 
+        </div>
+        <div class="section--container">
+            <div class="section--head">
+                <h1>Ongoing polls</h1>
+            </div>
+
+            <div class="content--polls">
+                <ul>
+                    {% for poll in polls %}
+                    <hr>
+                    <li class="list-group-item">
+                      <a href="{% url 'polls:detail' poll.id %}">{{ poll }}</a>
+                      {% if request.user == poll.owner %}
+                        <a href="{% url 'polls:edit_poll' poll.id %}" class='float-right'><i class="fas fa-pencil-alt"></i></a>
+                      {% endif %}
+                    </li>
+                    <hr>
+                    {% endfor %}
+                </ul>
+                <div aria-label="..." class="pagination">
+                  <ul class="pagination">
+                    {% if polls.has_previous %}
+                    <li class="page-item disabled">
+                      <a class="page-link" href="?page=1&{{params}}" tabindex="-1">First</a>
+                    </li>
+                    <li class="page-item disabled">
+                      <a class="page-link" href="?page={{ polls.previous_page_number }}&{{params}}" tabindex="-1">Previous</a>
+                    </li>
+                    {% endif %}
+                  
+                    <li class="page-item current">
+                      Page {{ polls.number }} of {{ polls.paginator.num_pages }}
+                    </li>
+
+                    {% if polls.has_next %}
+                    <li class="page-item disabled">
+                      <a class="page-link" href="?page={{ polls.next_page_number }}&{{params}}" tabindex="-1">Next</a>
+                    </li>
+                    <li class="page-item disabled">
+                      <a class="page-link" href="?page={{ polls.paginator.num_pages }}&{{params}}" tabindex="-1">Last</a>
+                    </li>
+                    {% endif %}
+                  </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    {% endblock %}
